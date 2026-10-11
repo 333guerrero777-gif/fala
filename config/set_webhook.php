@@ -4,10 +4,13 @@ require_once __DIR__ . '/config.php';
 
 $botToken = $BOT_TOKEN;
 
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
-$domain   = $_SERVER['HTTP_HOST'];
-$path     = rtrim(dirname($_SERVER['REQUEST_URI']), '/\\');
-$webhookUrl = $protocol . "://" . $domain . $path . "/webhook.php";
+$isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
+           (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ||
+           (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'vercel.app') !== false);
+
+$protocol = $isHttps ? "https" : "http";
+$domain   = $_SERVER['HTTP_HOST'] ?? 'fala-sable.vercel.app';
+$webhookUrl = "https://" . $domain . "/webhook.php";
 
 echo "<h1>Configurando Webhook de Telegram</h1>";
 echo "<p>URL detectada para el webhook: <b>$webhookUrl</b></p>";
