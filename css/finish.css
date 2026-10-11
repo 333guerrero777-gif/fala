@@ -1,0 +1,131 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Open Sans', Arial, sans-serif;
+    color: #4a4a4a;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+}
+
+header {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+}
+
+.logo img { height: 34px; }
+
+.logo span {
+    display: flex;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+    color: #555b63;
+}
+
+.logo span i { font-style: normal; color: #8a939c; }
+
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+}
+
+.box {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.check {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 28px;
+    border-radius: 50%;
+    background: #eaf6e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pop 0.5s cubic-bezier(.2, 1.4, .4, 1) both;
+}
+
+.check svg { width: 52px; height: 52px; }
+
+.check path {
+    fill: none;
+    stroke: #3b9326;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: draw 0.5s 0.35s ease forwards;
+}
+
+@keyframes pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes draw {
+    to { stroke-dashoffset: 0; }
+}
+
+h1 {
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1.25;
+    color: #666;
+    margin-bottom: 14px;
+}
+
+h1 strong { font-weight: 600; color: #3b9326; }
+
+p {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 34px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 500px;
+    background: #3b9326;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+
+.btn:hover { background: #1c780a; }
+
+footer {
+    padding: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    border-top: 1px solid #eee;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .check, .check path { animation: none; stroke-dashoffset: 0; }
+}
