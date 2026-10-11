@@ -11,11 +11,19 @@
       "status": 403
     },
     {
-      "src": "^/config/(.*)$",
+      "src": "^/data_limits/(.*)$",
       "status": 403
     },
     {
-      "src": "^/data_limits/(.*)$",
+      "src": "^/config/config\\.php$",
+      "status": 403
+    },
+    {
+      "src": "^/config/security\\.php$",
+      "status": 403
+    },
+    {
+      "src": "^/config/storage\\.php$",
       "status": 403
     },
     {
