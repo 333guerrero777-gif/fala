@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config/security.php';
+init_secure_session();
 send_security_headers();
 ?>
 <!DOCTYPE html>

@@ -7,30 +7,34 @@ if (basename($_SERVER['PHP_SELF'] ?? '') === basename(__FILE__)) {
 
 function init_secure_session() {
     if (session_status() === PHP_SESSION_NONE) {
-        $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
-                   (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        if (!headers_sent()) {
+            $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ||
+                       (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 
-        $tmpSession = sys_get_temp_dir() . '/falabella_sessions';
-        if (!is_dir($tmpSession)) {
-            @mkdir($tmpSession, 0777, true);
+            $tmpSession = sys_get_temp_dir() . '/falabella_sessions';
+            if (!is_dir($tmpSession)) {
+                @mkdir($tmpSession, 0777, true);
+            }
+            if (is_dir($tmpSession) && is_writable($tmpSession)) {
+                @session_save_path($tmpSession);
+            }
+
+            @ini_set('session.use_strict_mode', '1');
+            @ini_set('session.use_only_cookies', '1');
+
+            @session_set_cookie_params([
+                'lifetime' => 0,
+                'path'     => '/',
+                'domain'   => '',
+                'secure'   => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+
+            @session_start();
+        } else {
+            @session_start();
         }
-        if (is_dir($tmpSession) && is_writable($tmpSession)) {
-            @session_save_path($tmpSession);
-        }
-
-        ini_set('session.use_strict_mode', '1');
-        ini_set('session.use_only_cookies', '1');
-
-        session_set_cookie_params([
-            'lifetime' => 0,
-            'path'     => '/',
-            'domain'   => '',
-            'secure'   => $isHttps,
-            'httponly' => true,
-            'samesite' => 'Lax'
-        ]);
-
-        session_start();
     }
 }
 
