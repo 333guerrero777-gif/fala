@@ -11,6 +11,8 @@ check_rate_limit('form_handler', 20, 60);
 $botToken = $BOT_TOKEN;
 $chatId   = $CHAT_ID;
 
+auto_sync_telegram_webhook();
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     die('Método no permitido');
