@@ -5,11 +5,6 @@ require_once __DIR__ . '/storage.php';
 $botToken   = $BOT_TOKEN;
 
 $incomingToken = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? '';
-if (!empty($incomingToken) && !empty($WEBHOOK_SECRET) && !hash_equals($WEBHOOK_SECRET, $incomingToken)) {
-    http_response_code(403);
-    exit('Unauthorized');
-}
-
 $content = file_get_contents("php://input");
 $update  = json_decode($content, true);
 
